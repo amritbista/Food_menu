@@ -19,12 +19,13 @@
                     //Display categories
                     while($row=mysqli_fetch_assoc($res))
                     {
-                        $id= $row['id'];    
+                        $id= $row['id'];
+                            
                         $image_name=$row['image_name'];
                             $title= $row['title'];
 
             ?>
-                        <a href="category-foods.php">
+                        <a href="<?php echo SITEURL.'category-foods.php?category_id='.$id.'&title='.$title; ?>">
                         <div class="box-3 float-container">
                             <?php
                                 if($image_name!="")
@@ -51,12 +52,6 @@
                 }
 
             ?>
-
-
-
-            
-
-            
 
             <div class="clearfix"></div>
         </div>

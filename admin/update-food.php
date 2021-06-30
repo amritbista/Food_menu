@@ -207,6 +207,9 @@
                             }
                         }
                     }
+                    else{
+                        $new_image= $current_image; //Default image when image file is not selected
+                    }
                 }
 
                 //echo "Before update, title=".$title;

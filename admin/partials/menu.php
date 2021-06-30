@@ -5,7 +5,7 @@
 <html>
     <head>
         <title>Food Order Website - Home Page</title>
-        <link rel="stylesheet" href="../css/admin.css">
+        <link rel="stylesheet" href=<?php echo SITEURL."css/admin.css"; ?> >
 </head> 
 <body>
     

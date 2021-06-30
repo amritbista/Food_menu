@@ -1,48 +1,130 @@
 <?php include('partials-front/menu.php'); ?>
 
+<?php
+    if(isset($_GET['food_id']))
+    {
+        //ID received 
+        $food_id= $_GET['food_id'];
+
+        $sql= "SELECT * FROM tbl_food WHERE id='$food_id' ";
+                $res= mysqli_query($conn,$sql);
+
+                $count= mysqli_num_rows($res);
+                //echo $count;
+                if($count==1)
+                {
+                    //We have data in 
+                    $row=mysqli_fetch_assoc($res);
+                    $image_name= $row['image_name'];
+                    $title= $row['title'];
+                    $price= $row['price'];
+                }
+    }
+    else{
+        //ID not received and direct to homepage
+        header('location:'.SITEURL);
+    }
+    
+?>
+
+
+
     <!-- fOOD sEARCH Section Starts Here -->
     <section class="food-search">
         <div class="container">
             
             <h2 class="text-center text-white">Fill this form to confirm your order.</h2>
+  
+                        <form action="" class="order" method="POST">
+                            <fieldset>
+                                <legend>Selected Food</legend>
 
-            <form action="#" class="order">
-                <fieldset>
-                    <legend>Selected Food</legend>
-
-                    <div class="food-menu-img">
-                        <img src="images/menu-pizza.jpg" alt="Chicke Hawain Pizza" class="img-responsive img-curve">
-                    </div>
-    
-                    <div class="food-menu-desc">
-                        <h3>Food Title</h3>
-                        <p class="food-price">$2.3</p>
-
-                        <div class="order-label">Quantity</div>
-                        <input type="number" name="qty" class="input-responsive" value="1" required>
-                        
-                    </div>
-
-                </fieldset>
+                                <div class="food-menu-img">
+                                    <img src="<?php echo SITEURL.'images/food/'.$image_name; ?>" alt="Chicke Hawain Pizza" class="img-responsive img-curve">
+                                </div>
                 
-                <fieldset>
-                    <legend>Delivery Details</legend>
-                    <div class="order-label">Full Name</div>
-                    <input type="text" name="full-name" placeholder="E.g. Vijay Thapa" class="input-responsive" required>
+                                <div class="food-menu-desc">
+                                    <h3><?php echo $title; ?></h3>
+                                    <input type="hidden" name="title" value="<?php echo $title; ?>">
+                                    <p class="food-price">Nrs. <?php echo round($price,0); ?></p>
+                                    <input type="hidden" name="price" value="<?php echo $price; ?>">
 
-                    <div class="order-label">Phone Number</div>
-                    <input type="tel" name="contact" placeholder="E.g. 9843xxxxxx" class="input-responsive" required>
+                                    <div class="order-label">Quantity</div>
+                                    <input type="number" name="qty" class="input-responsive" value="1" required>
+                                    
+                                </div>
 
-                    <div class="order-label">Email</div>
-                    <input type="email" name="email" placeholder="E.g. hi@vijaythapa.com" class="input-responsive" required>
+                            </fieldset>
+            
 
-                    <div class="order-label">Address</div>
-                    <textarea name="address" rows="10" placeholder="E.g. Street, City, Country" class="input-responsive" required></textarea>
+                            
+                            <fieldset>
+                                <legend>Delivery Details</legend>
+                                <div class="order-label">Full Name</div>
+                                <input type="text" name="full-name" placeholder="E.g. Amrit Bista" class="input-responsive" required>
 
-                    <input type="submit" name="submit" value="Confirm Order" class="btn btn-primary">
-                </fieldset>
+                                <div class="order-label">Phone Number</div>
+                                <input type="tel" name="contact" placeholder="E.g. 9843xxxxxx" class="input-responsive" required>
 
-            </form>
+                                <div class="order-label">Email</div>
+                                <input type="email" name="email" placeholder="E.g. hi@vijaythapa.com" class="input-responsive" required>
+
+                                <div class="order-label">Address</div>
+                                <textarea name="address" rows="10" placeholder="E.g. Street, City, Country" class="input-responsive" required></textarea>
+
+                                <input type="submit" name="submit" value="Confirm Order" class="btn btn-primary">
+                            </fieldset>
+
+                            
+
+                        </form>
+
+                        <?php
+                                if(isset($_POST['submit']))
+                                {
+                                    //Submitted successfully
+                                    echo "Clicked";
+                                    $food= $_POST['title'];
+                                    $price= $_POST['price'];
+                                    $qty= $_POST['qty'];
+                                    $total= $price * $qty;
+
+                                    $order_date= date("Y-m-d h:i:sa");
+                                    $status= "Ordered"; //Ordered, On delivery, Delivered, Cancelled
+
+                                    $customer_name= $_POST['full-name'];
+                                    $contact= $_POST['contact'];
+                                    $email= $_POST['email'];
+                                    $address= $_POST['address'];
+
+                                    //Run sql query to enter data into Database
+                                    $sql2= "INSERT INTO tbl_order SET
+                                        food= '$food',
+                                        price= '$price',
+                                        qty= '$qty',
+                                        total= '$total',
+                                        order_date= '$order_date',
+                                        status= '$status',
+                                        customer_name= '$customer_name',
+                                        customer_contact= '$contact',
+                                        customer_email= '$email',
+                                        customer_address= '$address'
+                                    ";
+                                    $res2= mysqli_query($conn,$sql2);
+
+                                    if($res2==TRUE)
+                                    {
+                                        $_SESSION['order']="<div class='success text-center'>Food Ordered Successfully";
+                                        header('location:'.SITEURL);
+                                    }
+                                    else{
+                                        $_SESSION['order']="<div class='error text-center'>Food Ordered Failed";
+                                        header('location:'.SITEURL);
+                                    }
+                                }
+                                
+                                
+                        ?>    
 
         </div>
     </section>

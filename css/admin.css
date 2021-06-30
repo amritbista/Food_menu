@@ -32,13 +32,21 @@
 }
 
 table tr th{
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid black; 
     padding: 1%;
-    text-align: left;
+    text-align: left; 
+    
 }
 
 table tr td{
     padding: 1%;
+    border-bottom: 1px black;
+         
+}
+
+#menu_order td{
+    padding: 3px; /*Data for manage order used in table by using id="menu_order"*/
+    font-size: 12px;
 }
 
 
